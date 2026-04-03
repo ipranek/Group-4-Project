@@ -1,6 +1,7 @@
 import pandas as pd
 from bertopic import BERTopic
 import os
+from sklearn.feature_extraction.text import CountVectorizer
 
 # 1. Load your local CSV (No internet needed!)
 print(" Loading your 56k articles...")
@@ -19,12 +20,15 @@ timestamps = df_sample['date_publish'].tolist()
 
 print(f" Training BERTopic on {len(docs)} articles...")
 
+
+vectorizer = CountVectorizer(stop_words="english")
 # 4. Run BERTopic
 # This uses 'all-MiniLM-L6-v2' by default - small, fast, and accurate
 topic_model = BERTopic(
     language="english", 
     min_topic_size=20, # Smaller size for smaller sample
-    verbose=True
+    verbose=True,
+    vectorizer_model = vectorizer
 )
 
 topics, probs = topic_model.fit_transform(docs)
